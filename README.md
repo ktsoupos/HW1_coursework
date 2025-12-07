@@ -1,4 +1,4 @@
-# Verilog Project — HW_1_EX
+# Verilog Project — HW1_coursework
 
 Quick helper scripts and tasks to build and run the Verilog testbenches.
 
