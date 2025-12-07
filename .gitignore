@@ -1,0 +1,14 @@
+# build artifacts and waves
+sim/output.vvp
+dump.vcd
+*.log
+
+# editor / IDE
+.vscode/
+
+# swap/temp files
+*~
+*.swp
+
+# OS
+.DS_Store
