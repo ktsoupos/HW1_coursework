@@ -29,7 +29,7 @@ module calc_enc(input wire btnl,
 
     wire op3_and1, op3_and2;
     and (op3_and1, btnl, btnr);
-    and (op3_and2, bntl, btnd);
+    and (op3_and2, btnl, btnd);
     or  (alu_op[3], op3_and1, op3_and2);
 
 endmodule
