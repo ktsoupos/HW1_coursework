@@ -56,6 +56,8 @@ module calc_tb;
     
     // Main test sequence
     initial begin
+        $dumpfile("dump.vcd");
+        $dumpvars(0, calc_tb);
         // Initialize inputs
         btnac = 0; btnl = 0; btnr = 0; btnc = 0; btnd = 0; sw = 16'h0000;
         btnac = 1; @(posedge clk); btnac = 0;  // Force reset
