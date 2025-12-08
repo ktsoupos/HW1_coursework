@@ -13,8 +13,8 @@ module alu (
   parameter [3:0] ALUOP_ASR  = 4'b0010;  // Arithmetic right shift
   parameter [3:0] ALUOP_ASL  = 4'b0011;  // Arithmetic left shift
   parameter [3:0] ALUOP_ADD  = 4'b0100;  // Addition
-  parameter [3:0] ALUOP_SUB  = 4'b0110;  // Subtraction
-  parameter [3:0] ALUOP_MUL  = 4'b0111;  // Multiplication
+  parameter [3:0] ALUOP_SUB  = 4'b0101;  // Subtraction
+  parameter [3:0] ALUOP_MUL  = 4'b0110;  // Multiplication
   parameter [3:0] ALUOP_AND  = 4'b1000;  // Logical AND
   parameter [3:0] ALUOP_OR   = 4'b1001;  // Logical OR
   parameter [3:0] ALUOP_NOR  = 4'b1010;  // Logical NOR
