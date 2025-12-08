@@ -36,11 +36,11 @@ module calc_tb;
     // Task to press btnc (execute operation)
     task press_btnc;
     begin
-        @(posedge clk);  // wait until the right clock
-        btnc = 1;        // press
-        #1;
-        btnc = 0;        // release
-        @(posedge clk);  // accumulator latches
+    // Wait some time before first press
+    	#50;        // wait 50 time units
+    	btnc = 1; // press button
+    	#20;        // hold for 20 time units
+    	btnc = 0; // release button
     end
     endtask
 
