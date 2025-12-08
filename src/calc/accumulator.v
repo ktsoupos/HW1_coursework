@@ -8,8 +8,7 @@ module accumulator(input wire clk,
     always @(posedge clk) begin
         if (btnac) begin
             acc_low <= 16'b0;
-        end 
-        else if (btnc) begin
+        end else if (btnc) begin
             acc_low <= alu_result_low;
         end
     end
