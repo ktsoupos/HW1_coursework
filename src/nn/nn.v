@@ -305,7 +305,6 @@ always @(posedge clk or negedge resetn) begin
                 end
             end
             POSTPROCESS: begin
-                
             // Check overflow
             if (alu1_ovf && !total_ovf) begin
                 total_ovf     <= 1'b1;
