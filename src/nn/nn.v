@@ -59,7 +59,6 @@ reg [2:0] current_state, next_state;
 reg signed [31:0] inter_1, inter_2;    // After preprocessing
 reg signed [31:0] inter_3, inter_4;    // After input layer
 reg signed [31:0] inter_5;             // After output layer
-reg signed [31:0] temp_mul3;           // Temporary for output layer
 reg        weights_loaded;
 reg [2:0]  load_counter;
 
@@ -205,8 +204,6 @@ always @(*) begin
         IDLE: begin
             if (enable)
                 next_state = PREPROCESS;
-            else
-                next_state = DEACTIVATED;
         end
         default: begin
             next_state = DEACTIVATED;  
@@ -377,64 +374,60 @@ always @(*) begin
     case(current_state)
         DEACTIVATED: begin
             if(enable) begin
-                rom_addr1 = 8'd8; 
-                rom_addr2 = 8'd12;
+                rom_addr1 = ROM_SHIFT_BIAS_1;  // 8
+                rom_addr2 = ROM_SHIFT_BIAS_2;  // 12
             end
         end
+
         LOAD_WEIGHTS_BIASES: begin
+            // ROM addresses for NEXT cycle's data
             case(load_counter)
+                3'd0: begin
+                    rom_addr1 = ROM_WEIGHT_1;      // 16
+                    rom_addr2 = ROM_BIAS_1;        // 20
+                end
                 3'd1: begin
-                    rom_addr1 = ROM_WEIGHT_1;
-                    rom_addr2 = ROM_BIAS_1;
+                    rom_addr1 = ROM_WEIGHT_2;      // 24
+                    rom_addr2 = ROM_BIAS_2;        // 28
                 end
                 3'd2: begin
-                    rom_addr1 = ROM_WEIGHT_2;
-                    rom_addr2 = ROM_BIAS_2;
+                    rom_addr1 = ROM_WEIGHT_3;      // 32
+                    rom_addr2 = ROM_WEIGHT_4;      // 36
                 end
                 3'd3: begin
-                    rom_addr1 = ROM_WEIGHT_3;
-                    rom_addr2 = ROM_WEIGHT_4;
+                    rom_addr1 = ROM_BIAS_3;        // 40
+                    rom_addr2 = ROM_SHIFT_BIAS_3;  // 44
                 end
-                3'd4: begin
-                    rom_addr1 = ROM_BIAS_3;
-                    rom_addr2 = ROM_SHIFT_BIAS_1;
-                end
-                3'd5: begin
-                    rom_addr1 = ROM_SHIFT_BIAS_2;
-                    rom_addr2 = ROM_SHIFT_BIAS_3;
-                end
-                default;
+                default: ;
             endcase
 
-            // RF writes from previous cycle ROM data       
+            // RF writes from PREVIOUS cycle's ROM data
             rf_writeData1 = rom_dout1;
             rf_writeData2 = rom_dout2;
             rf_write = 1'b1;
 
             case(load_counter)
+                3'd0: begin                              // ← Start at 0!
+                    rf_writeReg1 = ADDR_SHIFT_BIAS_1;    // 2
+                    rf_writeReg2 = ADDR_SHIFT_BIAS_2;    // 3
+                end
                 3'd1: begin
-                    rf_writeReg1 = ADDR_WEIGHT_1;
-                    rf_writeReg2 = ADDR_BIAS_1;
+                    rf_writeReg1 = ADDR_WEIGHT_1;        // 4
+                    rf_writeReg2 = ADDR_BIAS_1;          // 5
                 end
                 3'd2: begin
-                    rf_writeReg1 = ADDR_WEIGHT_2;
-                    rf_writeReg2 = ADDR_BIAS_2;
+                    rf_writeReg1 = ADDR_WEIGHT_2;        // 6
+                    rf_writeReg2 = ADDR_BIAS_2;          // 7
                 end
                 3'd3: begin
-                    rf_writeReg1 = ADDR_WEIGHT_3;
-                    rf_writeReg2 = ADDR_WEIGHT_4;
+                    rf_writeReg1 = ADDR_WEIGHT_3;        // 8
+                    rf_writeReg2 = ADDR_WEIGHT_4;        // 9
                 end
                 3'd4: begin
-                    rf_writeReg1 = ADDR_BIAS_3;
-                    rf_writeReg2 = ADDR_SHIFT_BIAS_1;
+                    rf_writeReg1 = ADDR_BIAS_3;          // 10
+                    rf_writeReg2 = ADDR_SHIFT_BIAS_3;    // 11
                 end
-                3'd5: begin
-                    rf_writeReg1 = ADDR_SHIFT_BIAS_2;
-                    rf_writeReg2 = ADDR_SHIFT_BIAS_3;
-                end
-                default: begin
-                    rf_write = 1'b0;   
-                end
+                default: rf_write = 1'b0;
             endcase
         end
 
